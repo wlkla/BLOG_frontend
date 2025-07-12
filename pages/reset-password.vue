@@ -3,75 +3,18 @@
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-          创建新账户
+          重置密码
         </h2>
         <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          或者
-          <NuxtLink to="/login" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">
-            登录现有账户
-          </NuxtLink>
+          请输入您的新密码
         </p>
       </div>
       
-      <form class="mt-8 space-y-6" @submit.prevent="handleRegister">
+      <form v-if="!expired && !completed" class="mt-8 space-y-6" @submit.prevent="handleResetPassword">
         <div class="space-y-4">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              用户名
-            </label>
-            <input
-              id="username"
-              v-model="form.username"
-              name="username"
-              type="text"
-              autocomplete="username"
-              required
-              class="mt-1 input"
-              :class="{ 
-                'border-red-300 focus:ring-red-500 focus:border-red-500': usernameError,
-                'border-green-300 focus:ring-green-500 focus:border-green-500': usernameValid
-              }"
-              placeholder="请输入用户名（3-20个字符）"
-              @blur="validateUsername"
-            >
-            <p v-if="usernameError" class="mt-1 text-sm text-red-600 dark:text-red-400">
-              {{ usernameError }}
-            </p>
-            <p v-else-if="usernameValid" class="mt-1 text-sm text-green-600 dark:text-green-400">
-              用户名可用
-            </p>
-          </div>
-          
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              邮箱地址
-            </label>
-            <input
-              id="email"
-              v-model="form.email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class="mt-1 input"
-              :class="{ 
-                'border-red-300 focus:ring-red-500 focus:border-red-500': emailError,
-                'border-green-300 focus:ring-green-500 focus:border-green-500': emailValid
-              }"
-              placeholder="请输入邮箱地址"
-              @blur="validateEmail"
-            >
-            <p v-if="emailError" class="mt-1 text-sm text-red-600 dark:text-red-400">
-              {{ emailError }}
-            </p>
-            <p v-else-if="emailValid" class="mt-1 text-sm text-green-600 dark:text-green-400">
-              邮箱格式正确
-            </p>
-          </div>
-          
-          <div>
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              密码
+              新密码
             </label>
             <div class="relative">
               <input
@@ -86,7 +29,7 @@
                   'border-red-300 focus:ring-red-500 focus:border-red-500': passwordError,
                   'border-green-300 focus:ring-green-500 focus:border-green-500': passwordValid
                 }"
-                placeholder="请输入密码（至少6位，包含字母和数字）"
+                placeholder="请输入新密码（至少6位，包含字母和数字）"
                 @input="validatePassword"
               >
               <button
@@ -118,7 +61,7 @@
           
           <div>
             <label for="confirmPassword" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              确认密码
+              确认新密码
             </label>
             <div class="relative">
               <input
@@ -133,7 +76,7 @@
                   'border-red-300 focus:ring-red-500 focus:border-red-500': confirmPasswordError,
                   'border-green-300 focus:ring-green-500 focus:border-green-500': confirmPasswordValid
                 }"
-                placeholder="请再次输入密码"
+                placeholder="请再次输入新密码"
                 @blur="validateConfirmPassword"
               >
               <button
@@ -154,28 +97,6 @@
           </div>
         </div>
 
-        <!-- 服务条款 -->
-        <div class="flex items-start">
-          <input
-            id="agree-terms"
-            v-model="form.agreeTerms"
-            name="agree-terms"
-            type="checkbox"
-            required
-            class="h-4 w-4 mt-1 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          >
-          <label for="agree-terms" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-            我已阅读并同意
-            <a href="/terms" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 underline">
-              服务条款
-            </a>
-            和
-            <a href="/privacy" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 underline">
-              隐私政策
-            </a>
-          </label>
-        </div>
-
         <div>
           <button
             type="submit"
@@ -189,19 +110,19 @@
           >
             <span v-if="loading" class="flex items-center">
               <div class="spinner w-4 h-4 mr-2"></div>
-              注册中...
+              重置中...
             </span>
-            <span v-else>注册</span>
+            <span v-else>重置密码</span>
           </button>
         </div>
 
         <!-- 错误信息 -->
         <div v-if="error" class="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
           <div class="flex">
-            <XCircleIcon class="h-5 w-5 text-red-400 flex-shrink-0" />
+            <XCircleIcon class="h-5 w-5 text-red-400" />
             <div class="ml-3">
               <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
-                注册失败
+                重置失败
               </h3>
               <div class="mt-2 text-sm text-red-700 dark:text-red-300">
                 <p>{{ error }}</p>
@@ -209,142 +130,141 @@
             </div>
           </div>
         </div>
+      </form>
 
-        <!-- 成功信息 -->
-        <div v-if="success" class="rounded-md bg-green-50 dark:bg-green-900/20 p-4">
+      <!-- 链接过期 -->
+      <div v-else-if="expired" class="text-center">
+        <div class="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4 mb-6">
           <div class="flex">
-            <CheckCircleIcon class="h-5 w-5 text-green-400 flex-shrink-0" />
+            <ExclamationTriangleIcon class="h-5 w-5 text-yellow-400" />
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-green-800 dark:text-green-300">
-                注册成功！
+              <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+                重置链接已过期
               </h3>
-              <div class="mt-2 text-sm text-green-700 dark:text-green-300">
-                <p>{{ success }}</p>
-                <p class="mt-2">
-                  我们已向您的邮箱发送了验证邮件，请查看邮件并点击验证链接完成注册。
-                </p>
-                <div class="mt-3">
-                  <button
-                    @click="handleResendVerification"
-                    :disabled="resendLoading"
-                    class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-500"
-                  >
-                    {{ resendLoading ? '发送中...' : '重新发送验证邮件' }}
-                  </button>
-                </div>
+              <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                <p>此重置密码链接已过期或无效，请重新申请密码重置。</p>
               </div>
             </div>
           </div>
         </div>
-      </form>
+        
+        <div class="space-y-4">
+          <NuxtLink 
+            to="/forgot-password" 
+            class="btn btn-primary w-full"
+          >
+            重新申请密码重置
+          </NuxtLink>
+          
+          <NuxtLink 
+            to="/login" 
+            class="block text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          >
+            返回登录页面
+          </NuxtLink>
+        </div>
+      </div>
 
-      <!-- 已有账户提示 -->
-      <div class="text-center">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-          已有账户？
-          <NuxtLink to="/login" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">
+      <!-- 重置成功 -->
+      <div v-else-if="completed" class="text-center">
+        <div class="rounded-md bg-green-50 dark:bg-green-900/20 p-4 mb-6">
+          <div class="flex">
+            <CheckCircleIcon class="h-5 w-5 text-green-400" />
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-green-800 dark:text-green-300">
+                密码重置成功！
+              </h3>
+              <div class="mt-2 text-sm text-green-700 dark:text-green-300">
+                <p>您的密码已成功重置，现在可以使用新密码登录了。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <NuxtLink 
+            to="/login" 
+            class="btn btn-primary w-full"
+          >
             立即登录
           </NuxtLink>
-        </p>
+          
+          <NuxtLink 
+            to="/" 
+            class="block text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          >
+            返回首页
+          </NuxtLink>
+        </div>
+      </div>
+
+      <!-- 安全提示 -->
+      <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+        <div class="flex">
+          <InformationCircleIcon class="h-5 w-5 text-blue-400 flex-shrink-0" />
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">
+              安全提示
+            </h3>
+            <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+              <ul class="list-disc list-inside space-y-1">
+                <li>密码长度至少6位字符</li>
+                <li>包含字母和数字组合</li>
+                <li>建议使用特殊字符增强安全性</li>
+                <li>不要使用容易猜测的密码</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { 
   EyeIcon, 
   EyeSlashIcon, 
   XCircleIcon, 
-  CheckCircleIcon 
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon
 } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '~/stores/auth'
 
 // SEO设置
 useHead({
-  title: '用户注册',
+  title: '重置密码',
   meta: [
-    { name: 'description', content: '注册新账户以享受更多功能' }
+    { name: 'description', content: '重置您的密码，确保账户安全' }
   ]
 })
 
 const authStore = useAuthStore()
 const router = useRouter()
+const route = useRoute()
 
 const loading = ref(false)
-const resendLoading = ref(false)
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const error = ref('')
-const success = ref('')
+const expired = ref(false)
+const completed = ref(false)
 
 const form = reactive({
-  username: '',
-  email: '',
   password: '',
-  confirmPassword: '',
-  agreeTerms: false
+  confirmPassword: ''
 })
 
 // 验证状态
-const usernameError = ref('')
-const usernameValid = ref(false)
-const emailError = ref('')
-const emailValid = ref(false)
 const passwordError = ref('')
 const passwordValid = ref(false)
 const confirmPasswordError = ref('')
 const confirmPasswordValid = ref(false)
 
-// 用户名验证
-const validateUsername = () => {
-  const username = form.username.trim()
-  
-  if (!username) {
-    usernameError.value = '用户名不能为空'
-    usernameValid.value = false
-    return false
-  }
-  
-  if (username.length < 3 || username.length > 20) {
-    usernameError.value = '用户名必须为3-20个字符'
-    usernameValid.value = false
-    return false
-  }
-  
-  if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(username)) {
-    usernameError.value = '用户名只能包含字母、数字、下划线或中文'
-    usernameValid.value = false
-    return false
-  }
-  
-  usernameError.value = ''
-  usernameValid.value = true
-  return true
-}
-
-// 邮箱验证
-const validateEmail = () => {
-  const email = form.email.trim()
-  
-  if (!email) {
-    emailError.value = '邮箱不能为空'
-    emailValid.value = false
-    return false
-  }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    emailError.value = '请输入有效的邮箱地址'
-    emailValid.value = false
-    return false
-  }
-  
-  emailError.value = ''
-  emailValid.value = true
-  return true
-}
+// 从URL获取重置令牌
+const resetToken = computed(() => route.query.token as string)
 
 // 密码强度计算
 const passwordStrength = computed(() => {
@@ -436,87 +356,54 @@ const validateConfirmPassword = () => {
 
 // 表单验证
 const isFormValid = computed(() => {
-  return usernameValid.value &&
-         emailValid.value &&
-         passwordValid.value &&
-         confirmPasswordValid.value &&
-         form.agreeTerms
+  return passwordValid.value && confirmPasswordValid.value
 })
 
 // 监听表单变化进行实时验证
-watch(() => form.username, validateUsername)
-watch(() => form.email, validateEmail)
 watch(() => form.password, validatePassword)
 watch(() => form.confirmPassword, validateConfirmPassword)
 
-const handleRegister = async () => {
+const handleResetPassword = async () => {
   try {
     loading.value = true
     error.value = ''
-    success.value = ''
 
     // 最终验证
-    if (!validateUsername() || !validateEmail() || !validatePassword() || !validateConfirmPassword()) {
+    if (!validatePassword() || !validateConfirmPassword()) {
       return
     }
 
-    const result = await authStore.register({
-      username: form.username.trim(),
-      email: form.email.trim(),
-      password: form.password
-    })
+    const result = await authStore.resetPassword(resetToken.value, form.password)
 
     if (result.success) {
-      success.value = result.message
-      
-      // 清空表单
-      Object.assign(form, {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        agreeTerms: false
-      })
-      
-      // 重置验证状态
-      usernameValid.value = false
-      emailValid.value = false
-      passwordValid.value = false
-      confirmPasswordValid.value = false
+      completed.value = true
     } else {
       error.value = result.message
+      
+      // 检查是否是令牌过期错误
+      if (result.message.includes('过期') || result.message.includes('无效')) {
+        expired.value = true
+      }
     }
   } catch (err) {
-    error.value = '注册失败，请稍后重试'
+    error.value = '重置密码失败，请稍后重试'
   } finally {
     loading.value = false
   }
 }
 
-// 重新发送验证邮件
-const handleResendVerification = async () => {
-  try {
-    resendLoading.value = true
-    
-    const result = await authStore.resendVerification(form.email)
-    
-    if (result.success) {
-      success.value = result.message
-      error.value = ''
-    } else {
-      error.value = result.message
-    }
-  } catch (err) {
-    error.value = '发送邮件失败，请稍后重试'
-  } finally {
-    resendLoading.value = false
-  }
-}
-
-// 如果已经登录，重定向到首页
+// 页面加载时检查
 onMounted(() => {
+  // 如果没有重置令牌，重定向到忘记密码页面
+  if (!resetToken.value) {
+    router.push('/forgot-password')
+    return
+  }
+  
+  // 如果已经登录，重定向到首页
   if (authStore.isLoggedIn) {
     router.push('/')
   }
 })
 </script>
+~
