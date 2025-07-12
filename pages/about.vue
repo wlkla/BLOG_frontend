@@ -90,11 +90,11 @@
           <div class="space-y-3">
             <div class="flex items-center space-x-3">
               <EnvelopeIcon class="w-5 h-5 text-gray-400" />
-              <span class="text-gray-600 dark:text-gray-400">your-email@example.com</span>
+              <span class="text-gray-600 dark:text-gray-400">onebuaaer@gmail.com</span>
             </div>
             <div class="flex items-center space-x-3">
               <GlobeAltIcon class="w-5 h-5 text-gray-400" />
-              <span class="text-gray-600 dark:text-gray-400">GitHub: @yourusername</span>
+              <span class="text-gray-600 dark:text-gray-400">GitHub: @wlkla</span>
             </div>
           </div>
         </div>

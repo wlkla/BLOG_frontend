@@ -234,8 +234,8 @@
               联系方式
             </h3>
             <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <p>邮箱: your-email@example.com</p>
-              <p>GitHub: @yourusername</p>
+              <p>邮箱: onebuaaer@gmail.com</p>
+              <p>GitHub: @wlkla</p>
             </div>
           </div>
         </div>
