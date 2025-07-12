@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
 
 interface User {
   id: string
@@ -37,20 +36,9 @@ export const useAuthStore = defineStore('auth', {
         const token = localStorage.getItem('auth_token')
         if (token) {
           this.token = token
-          this.setAuthHeader(token)
           this.fetchUser()
         }
       }
-    },
-
-    // 设置认证头
-    setAuthHeader(token: string) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    },
-
-    // 清除认证头
-    clearAuthHeader() {
-      delete axios.defaults.headers.common['Authorization']
     },
 
     // 登录
@@ -59,8 +47,12 @@ export const useAuthStore = defineStore('auth', {
         this.loading = true
         const config = useRuntimeConfig()
         
-        const response = await axios.post(`${config.public.apiBase}/auth/login`, credentials)
-        const { token, user } = response.data
+        const { data } = await $fetch(`${config.public.apiBase}/auth/login`, {
+          method: 'POST',
+          body: credentials
+        })
+
+        const { token, user } = data
 
         this.token = token
         this.user = user
@@ -71,15 +63,12 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('auth_token', token)
         }
 
-        // 设置认证头
-        this.setAuthHeader(token)
-
         return { success: true, message: '登录成功' }
       } catch (error: any) {
         console.error('登录错误:', error)
         return { 
           success: false, 
-          message: error.response?.data?.message || '登录失败' 
+          message: error.data?.message || '登录失败' 
         }
       } finally {
         this.loading = false
@@ -96,8 +85,12 @@ export const useAuthStore = defineStore('auth', {
         this.loading = true
         const config = useRuntimeConfig()
         
-        const response = await axios.post(`${config.public.apiBase}/auth/register`, userData)
-        const { token, user } = response.data
+        const { data } = await $fetch(`${config.public.apiBase}/auth/register`, {
+          method: 'POST',
+          body: userData
+        })
+
+        const { token, user } = data
 
         this.token = token
         this.user = user
@@ -108,15 +101,12 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('auth_token', token)
         }
 
-        // 设置认证头
-        this.setAuthHeader(token)
-
         return { success: true, message: '注册成功' }
       } catch (error: any) {
         console.error('注册错误:', error)
         return { 
           success: false, 
-          message: error.response?.data?.message || '注册失败' 
+          message: error.data?.message || '注册失败' 
         }
       } finally {
         this.loading = false
@@ -129,9 +119,13 @@ export const useAuthStore = defineStore('auth', {
         if (!this.token) return
 
         const config = useRuntimeConfig()
-        const response = await axios.get(`${config.public.apiBase}/auth/me`)
+        const { data } = await $fetch(`${config.public.apiBase}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        })
         
-        this.user = response.data.user
+        this.user = data.user
         this.isAuthenticated = true
       } catch (error) {
         console.error('获取用户信息错误:', error)
@@ -149,9 +143,6 @@ export const useAuthStore = defineStore('auth', {
       if (process.client) {
         localStorage.removeItem('auth_token')
       }
-
-      // 清除认证头
-      this.clearAuthHeader()
 
       // 重定向到首页
       navigateTo('/')
