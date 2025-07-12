@@ -178,7 +178,7 @@ const resendSuccess = ref('')
 const resendError = ref('')
 
 // 从URL获取验证令牌
-const verifyToken = computed(() => route.query.token as string)
+const verifyToken = computed(() => String(route.query.token || ''))
 
 // 自动执行邮箱验证
 const verifyEmail = async () => {

@@ -264,7 +264,7 @@ const confirmPasswordError = ref('')
 const confirmPasswordValid = ref(false)
 
 // 从URL获取重置令牌
-const resetToken = computed(() => route.query.token as string)
+const resetToken = computed(() => String(route.query.token || ''))
 
 // 密码强度计算
 const passwordStrength = computed(() => {
@@ -406,4 +406,3 @@ onMounted(() => {
   }
 })
 </script>
-~

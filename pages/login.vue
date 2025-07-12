@@ -254,7 +254,7 @@ const handleLogin = async () => {
       success.value = '登录成功！正在跳转...'
       
       // 获取重定向URL或默认跳转到首页
-      const redirect = route.query.redirect as string || '/'
+      const redirect = String(route.query.redirect || '/')
       
       setTimeout(() => {
         router.push(redirect)
@@ -301,13 +301,13 @@ onMounted(() => {
   authStore.initAuth()
   
   if (authStore.isLoggedIn) {
-    const redirect = route.query.redirect as string || '/'
+    const redirect = String(route.query.redirect || '/')
     router.push(redirect)
   }
   
   // 如果URL中有成功消息
   if (route.query.message) {
-    success.value = route.query.message as string
+    success.value = String(route.query.message)
   }
 })
 </script>

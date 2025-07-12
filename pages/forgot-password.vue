@@ -153,7 +153,7 @@ const error = ref('')
 const success = ref('')
 const resendCooldown = ref(0)
 
-let cooldownTimer: NodeJS.Timeout | null = null
+let cooldownTimer = null;
 
 const handleForgotPassword = async () => {
   try {
@@ -183,7 +183,7 @@ const startResendCooldown = () => {
   cooldownTimer = setInterval(() => {
     resendCooldown.value--
     if (resendCooldown.value <= 0) {
-      clearInterval(cooldownTimer!)
+      clearInterval(cooldownTimer)
       cooldownTimer = null
     }
   }, 1000)
